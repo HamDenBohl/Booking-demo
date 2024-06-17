@@ -13,6 +13,8 @@ import java.util.regex.Pattern;
 @Table(name = "customer")
 public class Customer {
 
+    private static final String EMAIL_REGEX_PATTERN = "^(.+)@(.+).(.+)$";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private UUID id;
@@ -22,8 +24,6 @@ public class Customer {
     private final String lastName;
     @Column(name = "email", nullable = false)
     private final String email;
-
-    private static final String EMAIL_REGEX_PATTERN = "^(.+)@(.+).(.+)$";
 
     public Customer(final String firstName, final String lastName, final String email) {
         this.isValidEmail(email);

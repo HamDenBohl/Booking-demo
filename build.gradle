@@ -6,7 +6,6 @@ plugins {
 
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
 
 repositories {
 	mavenCentral()
@@ -16,9 +15,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.mindrot:jbcrypt:0.4'
-	testImplementation'org.junit.jupiter:junit-jupiter-api:5.10.2'
 	runtimeOnly 'com.h2database:h2'
-	runtimeOnly 'mysql:mysql-connector-java:8.0.33'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
@@ -27,33 +24,33 @@ test {
 }
 
 // Define Docker-related tasks
-tasks.register('removeDockerContainers', Exec) {
-	description = 'Remove Docker containers defined in docker-compose.yml'
+tasks.register('buildDocker', Exec) {
+	// Creates an executable JAR file
+	dependsOn bootJar
+	description = 'Build Docker image for the Spring Boot application'
 	group = 'docker'
 
-	commandLine 'docker-compose', 'down'
-
-	standardOutput = new ByteArrayOutputStream()
-	errorOutput = new ByteArrayOutputStream()
+	commandLine 'docker', 'build', '-t', 'demo-app:latest', '.'
 }
 
-tasks.register('restartDockerContainers', Exec) {
-	dependsOn removeDockerContainers
-	description = 'Restart Docker containers defined in docker-compose.yml'
+tasks.register('createDockerContainer', Exec) {
+	dependsOn buildDocker
+	description = 'Create Docker container for the Spring Boot application'
 	group = 'docker'
 
-	commandLine 'docker-compose', 'up', '-d'
-
-	standardOutput = new ByteArrayOutputStream()
-	errorOutput = new ByteArrayOutputStream()
+	commandLine 'docker', 'create', '--name', 'demo-app-container', '-p', '8080:8080', 'demo-app:latest'
 }
 
-tasks.register('startDockerContainers', Exec) {
-	description = 'Starts Docker containers defined in docker-compose.yml'
+tasks.register('startDockerContainer', Exec) {
+	dependsOn createDockerContainer
+	description = 'Start Docker container for the Spring Boot application'
 	group = 'docker'
 
-	commandLine 'docker-compose', 'up', '-d'
+	commandLine 'docker', 'start', 'demo-app-container'
+}
 
-	standardOutput = new ByteArrayOutputStream()
-	errorOutput = new ByteArrayOutputStream()
+tasks.register('buildAndStartDocker') {
+	dependsOn startDockerContainer
+	description = 'Build Docker image and start Docker container for the Spring Boot application'
+	group = 'docker'
 }

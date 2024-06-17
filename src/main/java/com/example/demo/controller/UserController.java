@@ -20,9 +20,11 @@ public class UserController {
     public List<User> getAllUsers() {
         List<User> test = new ArrayList<>();
         User user = new User();
+        user.setId(1234L);
         user.setName("JOHN");
         test.add(user);
         return test;
+//        return userRepository.findAll();
     }
 
     @PostMapping
