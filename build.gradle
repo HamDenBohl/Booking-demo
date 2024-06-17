@@ -1,0 +1,55 @@
+plugins {
+	id 'org.springframework.boot' version '3.1.0'
+	id 'io.spring.dependency-management' version '1.1.0'
+	id 'java'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '21'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	runtimeOnly 'com.h2database:h2'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+test {
+	useJUnitPlatform()
+}
+
+// Define Docker-related tasks
+tasks.register('buildDocker', Exec) {
+	dependsOn bootJar
+	description = 'Build Docker image for the Spring Boot application'
+	group = 'docker'
+
+	commandLine 'docker', 'build', '-t', 'demo-app:latest', '.'
+}
+
+tasks.register('createDockerContainer', Exec) {
+	dependsOn buildDocker
+	description = 'Create Docker container for the Spring Boot application'
+	group = 'docker'
+
+	commandLine 'docker', 'create', '--name', 'demo-app-container', '-p', '8080:8080', 'demo-app:latest'
+}
+
+tasks.register('startDockerContainer', Exec) {
+	dependsOn createDockerContainer
+	description = 'Start Docker container for the Spring Boot application'
+	group = 'docker'
+
+	commandLine 'docker', 'start', 'demo-app-container'
+}
+
+tasks.register('buildAndStartDocker') {
+	dependsOn startDockerContainer
+	description = 'Build Docker image and start Docker container for the Spring Boot application'
+	group = 'docker'
+}
