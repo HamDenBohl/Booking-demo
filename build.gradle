@@ -15,7 +15,7 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	runtimeOnly 'com.h2database:h2'
+	runtimeOnly 'mysql:mysql-connector-java:8.0.33'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
@@ -37,7 +37,7 @@ tasks.register('createDockerContainer', Exec) {
 	description = 'Create Docker container for the Spring Boot application'
 	group = 'docker'
 
-	commandLine 'docker', 'create', '--name', 'demo-app-container', '-p', '8080:8080', 'demo-app:latest'
+	commandLine 'docker', 'create', '--name', 'demo-app', '-p', '8080:8080', 'demo-app:latest'
 }
 
 tasks.register('startDockerContainer', Exec) {
@@ -45,7 +45,7 @@ tasks.register('startDockerContainer', Exec) {
 	description = 'Start Docker container for the Spring Boot application'
 	group = 'docker'
 
-	commandLine 'docker', 'start', 'demo-app-container'
+	commandLine 'docker', 'start', 'demo-app'
 }
 
 tasks.register('buildAndStartDocker') {
