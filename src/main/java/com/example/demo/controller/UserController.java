@@ -5,7 +5,9 @@ import com.example.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/users")
@@ -16,7 +18,11 @@ public class UserController {
 
     @GetMapping
     public List<User> getAllUsers() {
-        return userRepository.findAll();
+        List<User> test = new ArrayList<>();
+        User user = new User();
+        user.setName("JOHN");
+        test.add(user);
+        return test;
     }
 
     @PostMapping
