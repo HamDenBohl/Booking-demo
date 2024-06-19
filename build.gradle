@@ -26,10 +26,6 @@ test {
 }
 
 // Define Docker-related tasks
-tasks.register('buildDocker', Exec) {
-	// Creates an executable JAR file
-	dependsOn bootJar
-	description = 'Build Docker image for the Spring Boot application'
 tasks.register('removeDockerContainers', Exec) {
 	description = 'Remove Docker containers defined in docker-compose.yml'
 	group = 'docker'
