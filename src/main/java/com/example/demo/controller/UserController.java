@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/users")
@@ -19,11 +20,9 @@ public class UserController {
     public List<User> getAllUsers() {
         List<User> test = new ArrayList<>();
         User user = new User();
-        user.setId(1234L);
         user.setName("JOHN");
         test.add(user);
         return test;
-//        return userRepository.findAll();
     }
 
     @PostMapping

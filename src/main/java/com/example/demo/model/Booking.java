@@ -1,27 +1,38 @@
 package com.example.demo.model;
 
+import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
 
+@Entity
+@Table(name = "booking")
 public class Booking {
 
-    private final UUID bookingId = UUID.randomUUID();
-    private final Date startTime;
-    private final Date endTime;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private UUID bookingId;
 
+    @Column(name = "start_time", nullable = false)
+    private final LocalDateTime startTime;
 
-    public Booking(Date startTime, Date endTime){
+    @Column(name = "end_time", nullable = false)
+    private final LocalDateTime endTime;
+
+    @JoinColumn (name = "customer_id", nullable = false)
+    private User user;
+
+    public Booking(LocalDateTime startTime, LocalDateTime endTime){
         this.startTime = startTime;
         this.endTime = endTime;
     }
 
-
-
-    public Date getStartTime() {
+    public LocalDateTime getStartTime() {
         return this.startTime;
     }
 
-    public Date getEndTime() {
+    public LocalDateTime getEndTime() {
         return this.endTime;
     }
 

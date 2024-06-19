@@ -19,7 +19,45 @@ public class User {
     private String salt;
     private String hashedPassword;
 
+    public Integer getPhonenumber() {
+        return phonenumber;
+    }
 
+    public void setPhonenumber(Integer phonenumber) {
+        this.phonenumber = phonenumber;
+    }
+
+    public UserType getUserType() {
+        return userType;
+    }
+
+    public void setUserType(UserType userType) {
+        this.userType = userType;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
+    }
+
+    public String getHashedPassword() {
+        return hashedPassword;
+    }
+
+    public void setHashedPassword(String hashedPassword) {
+        this.hashedPassword = hashedPassword;
+    }
 
     public Long getId() {
         return id;
