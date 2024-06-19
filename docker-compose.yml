@@ -12,6 +12,11 @@ services:
       MYSQL_PASSWORD: testpassword
     volumes:
       - mysql-data:/var/lib/mysql
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: "512M"
 
   demo-app:
     build:
