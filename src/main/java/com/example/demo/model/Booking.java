@@ -20,6 +20,9 @@ public class Booking {
     @Column(name = "end_time", nullable = false)
     private LocalDateTime endTime;
 
+  //  @JoinColumn(name = "customer_id", nullable = false)
+  //  private Customer customer;
+
     // Getters and Setters
     public Long getBookingId() {
         return bookingId;

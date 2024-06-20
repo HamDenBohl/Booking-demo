@@ -18,6 +18,8 @@ dependencies {
 	implementation 'org.mindrot:jbcrypt:0.4'
 	runtimeOnly 'mysql:mysql-connector-java:8.0.33'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.testcontainers:mysql:1.17.3'
+
 }
 
 test {
@@ -34,8 +36,30 @@ tasks.register('removeDockerContainers', Exec) {
 	errorOutput = new ByteArrayOutputStream()
 }
 
-tasks.register('restartDockerContainers', Exec) {
+tasks.register('removeDockerImages', Exec) {
 	dependsOn removeDockerContainers
+	description = 'Remove all Docker images'
+	group = 'docker'
+
+	commandLine 'docker', 'rmi', '-f', '$(docker images -a -q)'
+
+	standardOutput = new ByteArrayOutputStream()
+	errorOutput = new ByteArrayOutputStream()
+}
+
+tasks.register('buildDockerImages', Exec) {
+	dependsOn removeDockerImages
+	description = 'Build Docker images defined in docker-compose.yml'
+	group = 'docker'
+
+	commandLine 'docker-compose', 'build'
+
+	standardOutput = new ByteArrayOutputStream()
+	errorOutput = new ByteArrayOutputStream()
+}
+
+tasks.register('restartDockerContainers', Exec) {
+	dependsOn buildDockerImages
 	description = 'Restart Docker containers defined in docker-compose.yml'
 	group = 'docker'
 
