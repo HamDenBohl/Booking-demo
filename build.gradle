@@ -29,26 +29,37 @@ test {
 tasks.register('removeDockerContainers', Exec) {
 	description = 'Remove Docker containers defined in docker-compose.yml'
 	group = 'docker'
-
 	commandLine 'docker-compose', 'down'
 
 	standardOutput = new ByteArrayOutputStream()
 	errorOutput = new ByteArrayOutputStream()
 }
 
-tasks.register('removeDockerImages', Exec) {
+tasks.register('removeMysqlImage', Exec) {
 	dependsOn removeDockerContainers
-	description = 'Remove all Docker images'
+	description = 'Remove all mysql image'
 	group = 'docker'
+	commandLine 'docker', 'rmi', 'mysql:8.0'
+	ignoreExitValue = true  // Ignore errors if the image is not found or cannot be removed
 
-	commandLine 'docker', 'rmi', '-f', '$(docker images -a -q)'
+	standardOutput = new ByteArrayOutputStream()
+	errorOutput = new ByteArrayOutputStream()
+}
+
+tasks.register('removeAppImage', Exec) {
+	dependsOn removeMysqlImage
+	description = 'Remove application image'
+	group = 'docker'
+	// Command to remove the booking-demo-demo-app image
+	commandLine 'docker', 'rmi', 'booking-demo-demo-app:latest'
+	ignoreExitValue = true  // Ignore errors if the image is not found or cannot be removed
 
 	standardOutput = new ByteArrayOutputStream()
 	errorOutput = new ByteArrayOutputStream()
 }
 
 tasks.register('buildDockerImages', Exec) {
-	dependsOn removeDockerImages
+	dependsOn removeAppImage
 	description = 'Build Docker images defined in docker-compose.yml'
 	group = 'docker'
 
