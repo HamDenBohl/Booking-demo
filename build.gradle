@@ -15,6 +15,7 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.projectlombok:lombok:1.18.26'
 	implementation 'org.mindrot:jbcrypt:0.4'
 	runtimeOnly 'mysql:mysql-connector-java:8.0.33'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -76,6 +77,7 @@ tasks.register('buildDockerImages', Exec) {
 	description = 'Build Docker images defined in docker-compose.yml'
 	group = 'docker'
 
+	commandLine 'gradlew clean build -x test'
 	commandLine 'docker-compose', 'build'
 
 	standardOutput = new ByteArrayOutputStream()

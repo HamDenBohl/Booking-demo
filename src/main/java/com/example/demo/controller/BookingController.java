@@ -15,7 +15,7 @@ public class BookingController {
     private BookingRepository bookingRepository;
 
     @GetMapping
-    public List<Booking> getAllBooking() {
+    public List<Booking> getAllBookings() {
         return bookingRepository.findAll();
     }
 
