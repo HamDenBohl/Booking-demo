@@ -20,12 +20,9 @@ public class Customer {
     private String lastName;
     @Column(name = "email", nullable = false)
     private String email;
-/*
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
-    */
-
 
     public String getFirstName() {
         return firstName;

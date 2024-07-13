@@ -44,7 +44,14 @@ tasks.register('removeMysqlImage', Exec) {
 
 	standardOutput = new ByteArrayOutputStream()
 	errorOutput = new ByteArrayOutputStream()
-}
+	doLast{
+		if(getExecutionResult().get() == 0){
+			print(getExecutionResult().get())
+			println "The task did not find or manage to remove the MySql image, make sure the image is updated and " +
+					"remove manually if necessary"
+		}
+		}
+	}
 
 tasks.register('removeAppImage', Exec) {
 	dependsOn removeMysqlImage
@@ -53,7 +60,13 @@ tasks.register('removeAppImage', Exec) {
 	// Command to remove the booking-demo-demo-app image
 	commandLine 'docker', 'rmi', 'booking-demo-demo-app:latest'
 	ignoreExitValue = true  // Ignore errors if the image is not found or cannot be removed
-
+	doLast{
+		if(getExecutionResult().get() == 0){
+			print(getExecutionResult().get())
+			println "The task did not find or manage to remove the App image, make sure the image is updated and remove" +
+					"manually if necessary"
+		}
+	}
 	standardOutput = new ByteArrayOutputStream()
 	errorOutput = new ByteArrayOutputStream()
 }

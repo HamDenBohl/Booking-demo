@@ -13,7 +13,7 @@ public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-/*
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
@@ -38,7 +38,7 @@ public class Reservation {
     public void setBooking(Booking booking) {
         this.booking = booking;
     }
-    */
+
 
     public Long getId() {
         return id;
