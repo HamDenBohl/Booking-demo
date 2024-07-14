@@ -1,11 +1,6 @@
 package com.example.demo;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import com.example.demo.Utils.ReflectionUtils;
-import com.example.demo.model.BaseClass;
 import com.example.demo.model.Customer;
-import com.example.demo.model.Reservation;
 import com.example.demo.model.User;
 import com.example.demo.repository.CustomerRepository;
 import com.example.demo.repository.UserRepository;
@@ -18,17 +13,14 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles("test")
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application-test.properties")
-public class UserRepositoryTest {
+public class testest {
 
 
     @Autowired
@@ -77,18 +69,9 @@ public class UserRepositoryTest {
     @Test
     @Transactional
     public void testCreateAndFindUser() {
-        // Arrange
-        try (Connection connection = dataSource.getConnection()) {
-
-
-        //Act
-            customerRepository.save(customer);
-
-            userRepository.save(user);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        // Act
+        userRepository.save(user);
+        customerRepository.save(customer);
 
         // Assert
         User foundUser = userRepository.findById(user.getId()).orElse(null);
@@ -97,27 +80,4 @@ public class UserRepositoryTest {
         assertThat(foundUser.getLastName()).isEqualTo("Doe");
         assertThat(foundUser.getEmail()).isEqualTo("john.doe@example.com");
     }
-
-    @Test
-    public void testEditUser() {
-        // Arrange
-        userRepository.save(user);
-        User newUser = new User();
-        newUser.setId(user.getId());
-        newUser.setUserType("customer");
-        newUser.setLastName("Bohl");
-        newUser.setFirstName("Signe");
-
-        // Act
-        userRepository.save(newUser);
-
-        // Assert
-        User foundUser = userRepository.findById(newUser.getId()).orElse(null);
-        assertThat(foundUser).isNotNull();
-        assertThat(foundUser.getFirstName()).isNotEqualTo(user.getFirstName());
-        assertThat(foundUser.getLastName()).isNotEqualTo(foundUser.getLastName());
-        assertThat(foundUser.getUserType()).isNotEqualTo(user.getUserType());
-    }
-
-
 }

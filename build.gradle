@@ -105,3 +105,35 @@ tasks.register('startDockerContainers', Exec) {
 	standardOutput = new ByteArrayOutputStream()
 	errorOutput = new ByteArrayOutputStream()
 }
+
+
+tasks.register('remove', Exec) {
+	description = 'Remove Docker containers defined in docker-compose.yml'
+	group = 'docker'
+
+	commandLine 'docker-compose', 'down'
+
+	standardOutput = new ByteArrayOutputStream()
+	errorOutput = new ByteArrayOutputStream()
+}
+
+tasks.register('restart', Exec) {
+	dependsOn removeDockerContainers
+	description = 'Restart Docker containers defined in docker-compose.yml'
+	group = 'docker'
+
+	commandLine 'docker-compose', 'up', '-d'
+
+	standardOutput = new ByteArrayOutputStream()
+	errorOutput = new ByteArrayOutputStream()
+}
+
+tasks.register('start', Exec) {
+	description = 'Starts Docker containers defined in docker-compose.yml'
+	group = 'docker'
+
+	commandLine 'docker-compose', 'up', '-d'
+
+	standardOutput = new ByteArrayOutputStream()
+	errorOutput = new ByteArrayOutputStream()
+}

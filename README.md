@@ -23,3 +23,7 @@ TASKKILL /IM "process name" /F
 or
 
 TASKKILL /F /PID pid_number
+
+
+Setup db connection:
+![img.png](img.png)

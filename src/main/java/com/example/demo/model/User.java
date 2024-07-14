@@ -42,8 +42,9 @@ public class User extends BaseClass {
     private String userType;
     @Column(name = "initials")
     private String initials;
-    @OneToOne
-    @JoinColumn(name = "customer_id", nullable = false)
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id", nullable = true)
     private Customer customer;
 
     public Long getId() {

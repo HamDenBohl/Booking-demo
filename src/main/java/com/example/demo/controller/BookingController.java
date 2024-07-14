@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.model.Booking;
 import com.example.demo.repository.BookingRepository;
+import com.example.demo.service.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,16 +13,36 @@ import java.util.List;
 public class BookingController {
 
     @Autowired
-    private BookingRepository bookingRepository;
+    private BookingService bookingService;
 
-    @GetMapping
+    @GetMapping("/all")
     public List<Booking> getAllBookings() {
-        return bookingRepository.findAll();
+        return bookingService.getAllBookings();
     }
 
-    @PostMapping
+    @GetMapping("/{Id}")
+    public Booking getBooking(@RequestBody Long id) {
+        return bookingService.getBooking(id);
+    }
+
+
+    @PostMapping("/create")
     public boolean createBooking(@RequestBody Booking booking) {
-        bookingRepository.save(booking);
+        bookingService.createBooking(booking);
         return true;
     }
+
+    @PostMapping("/edit")
+    public boolean editBooking(@RequestBody Booking booking) {
+        bookingService.editBooking(booking);
+        return true;
+    }
+
+    @PostMapping("/delete")
+    public boolean deleteBooking(@RequestBody Booking booking) {
+        bookingService.deleteBooking(booking);
+        return true;
+    }
+
+
 }

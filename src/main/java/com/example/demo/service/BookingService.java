@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.model.Booking;
 import com.example.demo.model.Booking;
 import com.example.demo.repository.BookingRepository;
+import com.example.demo.repository.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,8 +16,11 @@ public class BookingService {
    @Autowired
    BookingRepository bookingRepository;
 
-   public Booking getBooking(Booking booking){
-      Optional<Booking> getBooking = bookingRepository.findById(booking.getBookingId());
+   @Autowired
+   ReservationRepository reservationRepository;
+
+   public Booking getBooking(Long Id){
+      Optional<Booking> getBooking = bookingRepository.findById(Id);
       if(getBooking.isEmpty()){
          new Booking();
       }
@@ -47,9 +51,9 @@ public class BookingService {
       return true;
    }
 
-   public boolean deleteBooking(Booking Booking){
-      Long BookingId = Booking.getBookingId();
-      bookingRepository.delete(Booking);
-      return !bookingRepository.findById(BookingId).isEmpty();
+   public boolean deleteBooking(Booking booking){
+      Long bookingId = booking.getBookingId();
+      bookingRepository.delete(booking);
+      return !bookingRepository.findById(bookingId).isEmpty();
    }
    }

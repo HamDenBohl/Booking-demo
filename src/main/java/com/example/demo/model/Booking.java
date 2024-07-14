@@ -10,18 +10,24 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-@Data
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "booking")
 public class Booking extends BaseClass{
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bookingId;
+
     @Column(name = "start_time", nullable = false)
     private LocalDateTime startTime;
+
     @Column(name = "end_time", nullable = false)
     private LocalDateTime endTime;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reservation_id", nullable = false)
+    private Reservation reservation;
 
     public Long getBookingId() {
         return bookingId;
