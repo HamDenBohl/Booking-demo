@@ -20,7 +20,8 @@ public class BookingController {
     }
 
     @PostMapping
-    public Booking createBooking(@RequestBody Booking booking) {
-        return bookingRepository.save(booking);
+    public boolean createBooking(@RequestBody Booking booking) {
+        bookingRepository.save(booking);
+        return true;
     }
 }

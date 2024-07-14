@@ -15,7 +15,7 @@ import java.sql.SQLException;
 @ActiveProfiles("test")
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application-test.properties")
-class MySQLContainerTest {
+class MySQLContainerUserRepositoryImpl {
 
     @Autowired
     private DataSource dataSource;

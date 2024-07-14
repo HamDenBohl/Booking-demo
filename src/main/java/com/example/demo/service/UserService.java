@@ -1,12 +1,10 @@
 package com.example.demo.service;
 
 import java.security.SecureRandom;
-import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
-import com.example.demo.model.Booking;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 import lombok.*;

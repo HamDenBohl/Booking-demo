@@ -1,7 +1,9 @@
 package com.example.demo.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -10,7 +12,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "users")
-public class User extends BaseClass{
+public class User extends BaseClass {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,15 +25,22 @@ public class User extends BaseClass{
     private Integer phonenumber;
     @Column(name = "email", nullable = false)
     private String email;
+    @JsonIgnore
+    @NotBlank
     @Column(name = "password", nullable = false)
     private String password;
+    @JsonIgnore
+    @NotBlank
     @Column(name = "salt", nullable = false)
     private String salt;
+    @JsonIgnore
+    @NotBlank
     @Column(name = "hashedPassword", nullable = false)
     private String hashedPassword;
-    @Column(name ="userType", nullable = false)
+    @JsonIgnore
+    @Column(name = "userType", nullable = false)
     private String userType;
-    @Column(name ="initials")
+    @Column(name = "initials")
     private String initials;
     @OneToOne
     @JoinColumn(name = "customer_id", nullable = false)
