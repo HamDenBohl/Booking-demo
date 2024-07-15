@@ -15,8 +15,13 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.projectlombok:lombok:1.18.26'
+	implementation 'org.mindrot:jbcrypt:0.4'
 	runtimeOnly 'mysql:mysql-connector-java:8.0.33'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.testcontainers:mysql:1.17.3'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'com.fasterxml.jackson.core:jackson-annotations:2.13.4'
 }
 
 test {
@@ -26,15 +31,62 @@ test {
 tasks.register('removeDockerContainers', Exec) {
 	description = 'Remove Docker containers defined in docker-compose.yml'
 	group = 'docker'
-
 	commandLine 'docker-compose', 'down'
 
 	standardOutput = new ByteArrayOutputStream()
 	errorOutput = new ByteArrayOutputStream()
 }
 
-tasks.register('restartDockerContainers', Exec) {
+tasks.register('removeMysqlImage', Exec) {
 	dependsOn removeDockerContainers
+	description = 'Remove all mysql image'
+	group = 'docker'
+	commandLine 'docker', 'rmi', 'mysql:8.0'
+	ignoreExitValue = true  // Ignore errors if the image is not found or cannot be removed
+
+	standardOutput = new ByteArrayOutputStream()
+	errorOutput = new ByteArrayOutputStream()
+	doLast{
+		if(getExecutionResult().get() == 0){
+			print(getExecutionResult().get())
+			println "The task did not find or manage to remove the MySql image, make sure the image is updated and " +
+					"remove manually if necessary"
+		}
+		}
+	}
+
+tasks.register('removeAppImage', Exec) {
+	dependsOn removeMysqlImage
+	description = 'Remove application image'
+	group = 'docker'
+	// Command to remove the booking-demo-demo-app image
+	commandLine 'docker', 'rmi', 'booking-demo-demo-app:latest'
+	ignoreExitValue = true  // Ignore errors if the image is not found or cannot be removed
+	doLast{
+		if(getExecutionResult().get() == 0){
+			print(getExecutionResult().get())
+			println "The task did not find or manage to remove the App image, make sure the image is updated and remove" +
+					"manually if necessary"
+		}
+	}
+	standardOutput = new ByteArrayOutputStream()
+	errorOutput = new ByteArrayOutputStream()
+}
+
+tasks.register('buildDockerImages', Exec) {
+	dependsOn removeAppImage
+	description = 'Build Docker images defined in docker-compose.yml'
+	group = 'docker'
+
+	commandLine 'gradlew clean build -x test'
+	commandLine 'docker-compose', 'build'
+
+	standardOutput = new ByteArrayOutputStream()
+	errorOutput = new ByteArrayOutputStream()
+}
+
+tasks.register('restartDockerContainers', Exec) {
+	dependsOn buildDockerImages
 	description = 'Restart Docker containers defined in docker-compose.yml'
 	group = 'docker'
 

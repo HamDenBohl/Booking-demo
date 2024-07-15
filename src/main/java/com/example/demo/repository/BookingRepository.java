@@ -1,11 +1,10 @@
 package com.example.demo.repository;
 
-import com.example.demo.model.Test;
+import com.example.demo.model.Booking;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 @Repository
-public interface UserRepository extends JpaRepository<Test, Long> {
-
-
+public interface BookingRepository extends JpaRepository<Booking, Long> {
 }
