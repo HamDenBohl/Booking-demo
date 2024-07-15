@@ -5,7 +5,7 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
-import com.example.demo.model.User;
+import com.example.demo.model.Test;
 import com.example.demo.repository.UserRepository;
 import lombok.*;
 import org.mindrot.jbcrypt.BCrypt;
@@ -21,33 +21,31 @@ public class UserService {
 
     //IMPLEMENTER PBKDF2
 
-
-    public User getUser(User user){
-        Optional<User> getUser = userRepository.findById(user.getId());
-        if(getUser.isEmpty()){
-            new User();
+    public Test getUser(Test user){
+        Optional<Test> userFromDb = userRepository.findById(user.getId());
+    if(userFromDb.isEmpty() || !userFromDb.isPresent() ){
+            throw new RuntimeException();
         }
-        return getUser.get();
+        return userFromDb.get();
     }
 
-    public List<User> getAllUsers(){
-        List<User> allUsers = userRepository.findAll();
+    public List<Test> getAllUsers(){
+        List<Test> allUsers = userRepository.findAll();
         return allUsers;
     }
 
 
-    public boolean createUser(User user){
+    public void createUser(Test user){
         setPassword(user.getPassword(), user);
         userRepository.save(user);
-        return !userRepository.findById(user.getId()).isEmpty();
     }
 
-    public boolean editUser(User user){
-        Optional<User> existingUser = userRepository.findById(user.getId());
+    public Test editUser(Test user){
+        Optional<Test> existingUser = userRepository.findById(user.getId());
         if(existingUser.isEmpty()){
-            return false;
+         throw new RuntimeException();
         }
-        User newUser = new User();
+        Test newUser = new Test();
         newUser.setEmail(user.getEmail());
         newUser.setUserType(user.getUserType());
         newUser.setInitials(user.getInitials());
@@ -57,23 +55,21 @@ public class UserService {
         newUser.setId(existingUser.get().getId());
         newUser.setSalt(existingUser.get().getSalt());
         newUser.setHashedPassword(existingUser.get().getHashedPassword());
-        userRepository.save(user);
-        return true;
+        userRepository.save(newUser);
+        return newUser;
     }
 
-    public boolean deleteUser(User user){
+    public void deleteUser(Test user){
         Long userId = user.getId();
         userRepository.delete(user);
-        return !userRepository.findById(userId).isEmpty();
     }
 
-    public boolean changePassword(User user){
+    public void changePassword(Test user){
         setPassword(user.getPassword(), user);
         userRepository.save(user);
-        return true;
     }
 
-    public void setPassword(String password, User user) {
+    public void setPassword(String password, Test user) {
         // Generate a random salt
         SecureRandom random = new SecureRandom();
         byte[] saltBytes = new byte[16];

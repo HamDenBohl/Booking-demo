@@ -4,15 +4,12 @@ package com.example.demo.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Data;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "users")
-public class User extends BaseClass {
+@Table(name = "test")
+public class Test extends BaseClass {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,10 +39,6 @@ public class User extends BaseClass {
     private String userType;
     @Column(name = "initials")
     private String initials;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_id", nullable = true)
-    private Customer customer;
 
     public Long getId() {
         return id;
@@ -125,13 +118,5 @@ public class User extends BaseClass {
 
     public void setInitials(String initials) {
         this.initials = initials;
-    }
-
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
     }
 }

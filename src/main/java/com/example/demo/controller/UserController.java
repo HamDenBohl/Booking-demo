@@ -1,8 +1,11 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.User;
+import com.example.demo.model.Reservation;
+import com.example.demo.model.Test;
 import com.example.demo.service.UserService;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,34 +18,39 @@ public class UserController {
     private UserService userService;
 
     @GetMapping ("/findUsers")
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
+    public ResponseEntity<List<Test>> getAllUsers() {
+        List<Test> users = userService.getAllUsers();
+        return ResponseEntity.ok(users);
     }
 
     @GetMapping("/findUser")
-    public User getUser(@RequestBody User user) {
-        return userService.getUser(user);
+    public ResponseEntity<Test> getUser(@RequestBody Test user) {
+        Test foundUser = userService.getUser(user);
+        return ResponseEntity.ok(foundUser);
     }
 
-
     @PostMapping("/create")
-    public boolean createUser(@RequestBody User user) {
-        return userService.createUser(user);
+    public ResponseEntity createUser(@RequestBody Test user) {
+        userService.createUser(user);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/edit")
-    public boolean editUser(@RequestBody User user) {
-        return userService.editUser(user);
+    public ResponseEntity<Test> editUser(@RequestBody Test user) {
+        Test editedUser = userService.editUser(user);
+        return ResponseEntity.ok(editedUser);
     }
 
     @PostMapping("/delete")
-    public boolean deleteUser(@RequestBody User user) {
-        return userService.deleteUser(user);
+    public ResponseEntity deleteUser(@RequestBody Test user) {
+        userService.deleteUser(user);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/changePassword")
-    public boolean changePassword(@RequestBody User user) {
-        return userService.changePassword(user);
+    public ResponseEntity changePassword(@RequestBody Test user) {
+        userService.changePassword(user);
+        return ResponseEntity.ok().build();
     }
 
 }

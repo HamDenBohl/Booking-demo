@@ -1,15 +1,12 @@
 package com.example.demo.service;
 
 import com.example.demo.model.Customer;
-import com.example.demo.model.User;
+import com.example.demo.model.Test;
 import com.example.demo.repository.CustomerRepository;
 import lombok.Data;
-import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.security.SecureRandom;
-import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,7 +23,7 @@ public class CustomerService {
     public Customer getCustomer(Customer customer){
         Optional<Customer> getUser = customerRepository.findById(customer.getId());
         if(getUser.isEmpty()){
-            new User();
+            new Test();
         }
         return getUser.get();
     }
@@ -49,7 +46,7 @@ public class CustomerService {
         }
         Customer newCustomer = new Customer();
         newCustomer.setEmail(customer.getEmail());
-        newCustomer.setUser(existingUser.get().getUser());
+        newCustomer.setUserId(existingUser.get().getUserId());
         newCustomer.setFirstName(existingUser.get().getFirstName());
         newCustomer.setLastName(existingUser.get().getLastName());
         newCustomer.setReservation(existingUser.get().getReservation());
