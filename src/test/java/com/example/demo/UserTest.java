@@ -9,10 +9,12 @@ import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 
 @ActiveProfiles("test")
 @SpringBootTest
-public class UserUser {
+@TestPropertySource(locations = "classpath:application-test.properties")
+public class UserTest {
 
     @Autowired
     UserService userService;
@@ -25,6 +27,7 @@ public class UserUser {
         User testUser = new User();
         userService.setPassword("test",testUser);
     }
+
 
     @Test
     public void userIdTest(){

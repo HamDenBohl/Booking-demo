@@ -15,6 +15,7 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'de.mkammerer:argon2-jvm:2.11'
 	implementation 'org.mindrot:jbcrypt:0.4'
 	runtimeOnly 'com.h2database:h2'
 	implementation 'org.projectlombok:lombok:1.18.26'

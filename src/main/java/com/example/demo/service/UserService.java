@@ -2,13 +2,12 @@ package com.example.demo.service;
 
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
+import de.mkammerer.argon2.Argon2;
+import de.mkammerer.argon2.Argon2Factory;
 import lombok.Data;
-import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.security.SecureRandom;
-import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,7 +18,7 @@ public class UserService {
     @Autowired
     UserRepository userRepository;
 
-    //IMPLEMENTER PBKDF2
+    private Argon2 argon2 = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2id);
 
     public User getUser(User user) {
         Optional<User> userFromDb = userRepository.findById(user.getId());
@@ -70,24 +69,22 @@ public class UserService {
     }
 
     public void setPassword(String password, User user) {
-        // Generate a random salt
-        SecureRandom random = new SecureRandom();
-        byte[] saltBytes = new byte[16];
-        random.nextBytes(saltBytes);
-        String salt = Base64.getEncoder().encodeToString(saltBytes);
+        // Parameters: iterations = 3, memory = 64MB, parallelism = 2
+        int iterations = 3;
+        int memory = 65536; // 64 MB
+        int parallelism = 2;
+        // Hash the password with Argon2
+        String hashedPassword = argon2.hash(iterations, memory, parallelism, password);
 
-        // Hash the password with the salt
-        String hashedPassword = hashPassword(password);
-
-        user.setSalt(salt);
         user.setHashedPassword(hashedPassword);
     }
 
-    private String hashPassword(String password) {
-        return BCrypt.hashpw(password, BCrypt.gensalt(12));
+    public boolean checkPassword(String password, User user) {
+        String hashedPassword = user.getHashedPassword();
+
+        // Verify the password with Argon2
+        return argon2.verify(hashedPassword, password);
     }
-
-
 }
 
 

@@ -1,0 +1,24 @@
+Determining Good Argon2id Parameters
+Parameters
+Iterations (Time Cost)
+
+Concept: The number of times the hashing function is executed. Increasing the iterations makes the hashing process more time-consuming, which slows down brute-force attacks.
+Determining good values:
+Benchmark how long it takes to hash a password on your system.
+Choose a value that ensures hashing takes a reasonable amount of time for legitimate users (e.g., 0.5 to 1 second).
+Example: Start with iterations = 3 and adjust based on performance and security needs.
+
+Memory Usage (Memory Cost)
+
+Concept: The amount of RAM required to compute the hash. Higher memory usage makes it harder for attackers to use GPUs and other specialized hardware, as they may not have enough memory to perform many simultaneous hashes.
+Determining good values:
+Test how much memory your system can allocate without affecting performance.
+Choose a value that is as high as possible without causing issues for legitimate users.
+Example: Start with memory = 64 MB and adjust upwards if your system can handle it without significant performance degradation.
+
+Parallelism (Parallelism Factor)
+
+Concept: The number of parallel threads (or CPU cores) used to compute the hash. This parameter allows Argon2 to take advantage of multi-core processors.
+Determining good values:
+Set the parallelism factor to the number of cores available on your system, but ensure it doesn't negatively impact other operations.
+Example: If you have an 8-core CPU, set parallelism = 8, but test to ensure it doesn’t adversely affect performance.
