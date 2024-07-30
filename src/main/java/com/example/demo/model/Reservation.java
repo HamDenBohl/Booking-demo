@@ -1,25 +1,51 @@
 package com.example.demo.model;
 
-/**
- * @author joseneto
- *
- */
-public class Reservation {
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-    private final Customer customer;
-    private final Booking booking;
+import java.util.List;
 
-    public Reservation(final Customer customer,
-                       final Booking booking) {
-        this.customer = customer;
-        this.booking = booking;
+@Entity
+@EntityListeners(AuditingEntityListener.class)
+@Table(name = "reservation")
+public class Reservation extends BaseClass {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long reservationId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id", nullable = false)
+    private Customer customer;
+    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Booking> booking;
+
+
+    public Long getReservationId() {
+        return reservationId;
     }
 
+    public void setReservationId(Long reservationId) {
+        this.reservationId = reservationId;
+    }
 
+    public Customer getCustomer() {
+        return customer;
+    }
 
-    @Override
-    public String toString() {
-        return "Customer: " + this.customer.toString();
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public List<Booking> getBooking() {
+        return booking;
+    }
+
+    public void setBooking(Booking booking) {
+        this.booking.add(booking);
     }
 }

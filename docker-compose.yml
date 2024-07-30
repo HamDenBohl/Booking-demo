@@ -19,6 +19,7 @@ services:
           memory: "512M"
 
   demo-app:
+    image: booking-demo-app:latest
     build:
       context: .
       dockerfile: Dockerfile

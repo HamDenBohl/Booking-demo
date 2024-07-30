@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.db;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -15,7 +15,7 @@ import java.sql.SQLException;
 @ActiveProfiles("test")
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application-test.properties")
-class MySQLContainerTest {
+class MySQLContainerUserRepositoryImpl {
 
     @Autowired
     private DataSource dataSource;

@@ -1,5 +1,12 @@
 # Getting Started
 
+# MySQL install
+
+* [MySql installation](https://dev.mysql.com/downloads/installer/)
+ - Install server
+ - Install workbench
+ - Give full access
+
 ### Reference Documentation
 For further reference, please consider the following sections:
 

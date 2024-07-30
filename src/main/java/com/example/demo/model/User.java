@@ -1,23 +1,68 @@
 package com.example.demo.model;
-import com.example.demo.UserType;
+
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import java.security.SecureRandom;
-import java.util.Base64;
-import org.mindrot.jbcrypt.BCrypt;
+import jakarta.validation.constraints.NotBlank;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
-@Table(name = "users")
-public class User {
+@EntityListeners(AuditingEntityListener.class)
+@Table(name = "User")
+public class User extends BaseClass {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
+    @Column(name = "first_name", nullable = false)
+    private String firstName;
+    @Column(name = "last_name", nullable = false)
+    private String lastName;
+    @Column(name = "phonenumber", nullable = false)
     private Integer phonenumber;
-    private UserType userType;
+    @Column(name = "email", nullable = false)
     private String email;
+    @JsonIgnore
+    @NotBlank
+    @Column(name = "password", nullable = false)
+    private String password;
+    @JsonIgnore
+    @NotBlank
+    @Column(name = "salt", nullable = false)
     private String salt;
+    @JsonIgnore
+    @NotBlank
+    @Column(name = "hashedPassword", nullable = false)
     private String hashedPassword;
+    @JsonIgnore
+    @Column(name = "userType", nullable = false)
+    private String userType;
+    @Column(name = "initials")
+    private String initials;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
     public Integer getPhonenumber() {
         return phonenumber;
@@ -27,20 +72,20 @@ public class User {
         this.phonenumber = phonenumber;
     }
 
-    public UserType getUserType() {
-        return userType;
-    }
-
-    public void setUserType(UserType userType) {
-        this.userType = userType;
-    }
-
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getSalt() {
@@ -59,39 +104,19 @@ public class User {
         this.hashedPassword = hashedPassword;
     }
 
-    public Long getId() {
-        return id;
+    public String getUserType() {
+        return userType;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setUserType(String userType) {
+        this.userType = userType;
     }
 
-    public String getName() {
-        return name;
+    public String getInitials() {
+        return initials;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setInitials(String initials) {
+        this.initials = initials;
     }
-
-
-    //IMPLEMENTER PBKDF2
-
-    public void setPassword(String password) {
-        // Generate a random salt
-        SecureRandom random = new SecureRandom();
-        byte[] saltBytes = new byte[16];
-        random.nextBytes(saltBytes);
-        this.salt = Base64.getEncoder().encodeToString(saltBytes);
-
-        // Hash the password with the salt
-        String hashedPassword = hashPassword(password);
-        this.hashedPassword = hashedPassword;
-    }
-
-    private String hashPassword(String password) {
-        return BCrypt.hashpw(password,BCrypt.gensalt(12));
-    }
-
 }
