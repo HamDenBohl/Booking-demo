@@ -24,6 +24,8 @@ public class Booking extends BaseClass{
 
     @Column(name = "end_time", nullable = false)
     private LocalDateTime endTime;
+    @Column(name = "note")
+    private String note;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reservation_id", nullable = false)

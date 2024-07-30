@@ -21,6 +21,12 @@ public class BaseClass {
     private LocalDateTime modifiedDate;
     @Column(name = "modified_by")
     private String modifiedBy;
+    @Column(name = "version")
+    private String version;
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
 
     public void setCreatedDate(LocalDateTime createdDate) {
         this.createdDate = createdDate;
