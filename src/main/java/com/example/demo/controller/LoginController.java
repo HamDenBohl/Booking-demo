@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 @RestController
 @RequestMapping("/login")
-//@CrossOrigin(origins = "http://localhost:3000")  // Allow requests only from this origin
+@CrossOrigin(origins = "http://localhost:3000")  // Allow requests only from this origin
 public class LoginController {
 
     private static final Logger logger = LoggerFactory.getLogger(LoginController.class);

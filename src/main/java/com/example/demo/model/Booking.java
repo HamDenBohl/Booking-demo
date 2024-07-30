@@ -1,57 +1,59 @@
 package com.example.demo.model;
 
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-
 import jakarta.persistence.*;
-import lombok.Data;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-@Entity
-@EntityListeners(AuditingEntityListener.class)
-@Table(name = "booking")
-public class Booking extends BaseClass{
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+@Entity
+@Table(name = "booking")
+public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bookingId;
-
     @Column(name = "start_time", nullable = false)
-    private LocalDateTime startTime;
-
+    private Date startTime;
     @Column(name = "end_time", nullable = false)
-    private LocalDateTime endTime;
-    @Column(name = "note")
-    private String note;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reservation_id", nullable = false)
     private Reservation reservation;
 
-    public Long getBookingId() {
-        return bookingId;
+
+    public Long getId(){
+        return this.bookingId;
     }
 
     public void setBookingId(Long bookingId) {
         this.bookingId = bookingId;
     }
 
-    public LocalDateTime getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(LocalDateTime startTime) {
+    public void setStartTime(Date startTime) {
         this.startTime = startTime;
     }
 
-    public LocalDateTime getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(LocalDateTime endTime) {
+    public void setEndTime(Date endTime) {
         this.endTime = endTime;
     }
+
+    public Date getStartTime() {
+        return this.startTime;
+    }
+
+    public Date getEndTime() {
+        return this.endTime;
+    }
+
+    @Override
+    public String toString() {
+        return "Booking ID: " + this.bookingId
+                + "\nStartTime Date: " + this.startTime
+                + "\nEndTime Date: " + this.endTime;
+    }
+
+
+
 }

@@ -15,8 +15,12 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'de.mkammerer:argon2-jvm:2.11'
+	implementation 'org.mindrot:jbcrypt:0.4'
+	runtimeOnly 'com.h2database:h2'
 	implementation 'org.projectlombok:lombok:1.18.26'
 	implementation 'org.mindrot:jbcrypt:0.4'
+	implementation 'dk.digst:oiosaml3.java:3.2.1'
 	runtimeOnly 'mysql:mysql-connector-java:8.0.33'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.testcontainers:mysql:1.17.3'
@@ -24,26 +28,28 @@ dependencies {
 	implementation 'com.fasterxml.jackson.core:jackson-annotations:2.13.4'
 }
 
+tasks.withType(org.springframework.boot.gradle.tasks.bundling.BootJar) {
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
 test {
 	useJUnitPlatform()
 }
 
+// Define Docker-related tasks
 tasks.register('removeDockerContainers', Exec) {
 	description = 'Remove Docker containers defined in docker-compose.yml'
 	group = 'docker'
 	commandLine 'docker-compose', 'down'
-
 	standardOutput = new ByteArrayOutputStream()
 	errorOutput = new ByteArrayOutputStream()
 }
-
 tasks.register('removeMysqlImage', Exec) {
 	dependsOn removeDockerContainers
 	description = 'Remove all mysql image'
 	group = 'docker'
 	commandLine 'docker', 'rmi', 'mysql:8.0'
 	ignoreExitValue = true  // Ignore errors if the image is not found or cannot be removed
-
 	standardOutput = new ByteArrayOutputStream()
 	errorOutput = new ByteArrayOutputStream()
 	doLast{
@@ -52,9 +58,8 @@ tasks.register('removeMysqlImage', Exec) {
 			println "The task did not find or manage to remove the MySql image, make sure the image is updated and " +
 					"remove manually if necessary"
 		}
-		}
 	}
-
+}
 tasks.register('removeAppImage', Exec) {
 	dependsOn removeMysqlImage
 	description = 'Remove application image'
@@ -72,24 +77,20 @@ tasks.register('removeAppImage', Exec) {
 	standardOutput = new ByteArrayOutputStream()
 	errorOutput = new ByteArrayOutputStream()
 }
-
 tasks.register('buildDockerImages', Exec) {
 	dependsOn removeAppImage
 	description = 'Build Docker images defined in docker-compose.yml'
 	group = 'docker'
 
-	commandLine 'gradlew clean build -x test'
 	commandLine 'docker-compose', 'build'
 
 	standardOutput = new ByteArrayOutputStream()
 	errorOutput = new ByteArrayOutputStream()
 }
-
 tasks.register('restartDockerContainers', Exec) {
 	dependsOn buildDockerImages
 	description = 'Restart Docker containers defined in docker-compose.yml'
 	group = 'docker'
-
 	commandLine 'docker-compose', 'up', '-d'
 
 	standardOutput = new ByteArrayOutputStream()
@@ -99,7 +100,6 @@ tasks.register('restartDockerContainers', Exec) {
 tasks.register('startDockerContainers', Exec) {
 	description = 'Starts Docker containers defined in docker-compose.yml'
 	group = 'docker'
-
 	commandLine 'docker-compose', 'up', '-d'
 
 	standardOutput = new ByteArrayOutputStream()

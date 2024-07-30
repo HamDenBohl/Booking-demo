@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class BookingService {
@@ -38,20 +39,19 @@ public class BookingService {
     }
 
     public Booking editBooking(Booking booking) {
-        Optional<Booking> existingBooking = bookingRepository.findById(booking.getBookingId());
+        Optional<Booking> existingBooking = bookingRepository.findById(booking.getId());
         if (existingBooking.isEmpty()) {
             throw new RuntimeException();
         }
         Booking newBooking = new Booking();
         newBooking.setStartTime(booking.getStartTime());
         newBooking.setEndTime(booking.getEndTime());
-        newBooking.setBookingId(booking.getBookingId());
+        newBooking.setBookingId(booking.getId());
         bookingRepository.save(booking);
         return newBooking;
     }
 
     public void deleteBooking(Booking booking) {
-        Long bookingId = booking.getBookingId();
         bookingRepository.delete(booking);
     }
 }

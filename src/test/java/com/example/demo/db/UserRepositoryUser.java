@@ -3,7 +3,7 @@ package com.example.demo.db;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.example.demo.model.Customer;
-import com.example.demo.model.Test;
+import com.example.demo.model.User;
 import com.example.demo.repository.CustomerRepository;
 import com.example.demo.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -22,7 +22,7 @@ import java.util.Optional;
 @ActiveProfiles("test")
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application-test.properties")
-public class UserRepositoryTest {
+public class UserRepositoryUser {
 
 
     @Autowired
@@ -36,7 +36,7 @@ public class UserRepositoryTest {
 
     private Customer customer;
 
-    private Test user;
+    private User user;
 
     @BeforeEach
     public void BeforeTest() {
@@ -49,7 +49,7 @@ public class UserRepositoryTest {
         customer.setModifiedBy("system");
         customer.setModifiedDate(LocalDateTime.now());
 
-        user = new Test();
+        user = new User();
         user.setFirstName("John");
         user.setLastName("Doe");
         user.setPhonenumber(1234567890);
@@ -81,7 +81,7 @@ public class UserRepositoryTest {
         }
 
         // Assert
-        Test foundUser = userRepository.findById(user.getId()).orElse(null);
+        User foundUser = userRepository.findById(user.getId()).orElse(null);
         assertThat(foundUser).isNotNull();
         assertThat(foundUser.getFirstName()).isEqualTo("John");
         assertThat(foundUser.getLastName()).isEqualTo("Doe");
@@ -91,14 +91,14 @@ public class UserRepositoryTest {
     @org.junit.jupiter.api.Test
     public void testFindAndEditAndPersistUser() {
         // Arrange
-        Test dbUser = new Test();
+        User dbUser = new User();
         try (Connection connection = dataSource.getConnection()) {
             connection.beginRequest();
             customerRepository.save(customer);
             userRepository.save(user);
 
             //Act
-            Optional<Test> userFromDb = userRepository.findById(user.getId());
+            Optional<User> userFromDb = userRepository.findById(user.getId());
             userFromDb.get().setId(user.getId());
             userFromDb.get().setUserType("customer");
             userFromDb.get().setLastName("Bohl");
@@ -125,7 +125,7 @@ public class UserRepositoryTest {
             connection.beginRequest();
             customerRepository.save(customer);
             userRepository.save(user);
-            Test otherUser = user;
+            User otherUser = user;
             otherUser.setUserType("customer");
             otherUser.setFirstName("test");
             userRepository.save(otherUser);
@@ -136,8 +136,8 @@ public class UserRepositoryTest {
             userRepository.deleteById(otherUser.getId());
 
         //Assert
-            Test userFromDb = userRepository.findById(userId).orElse(null);
-            Test otherUserFromDb = userRepository.findById(otherUserId).orElse(null);
+            User userFromDb = userRepository.findById(userId).orElse(null);
+            User otherUserFromDb = userRepository.findById(otherUserId).orElse(null);
 
             assertThat(userFromDb).isNull();
             assertThat(otherUserFromDb).isNull();
