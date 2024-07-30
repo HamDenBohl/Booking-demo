@@ -18,6 +18,7 @@ public class Booking {
     @Column(name = "start_time", nullable = false)
     private Date startTime;
     @Column(name = "end_time", nullable = false)
+    private Date endTime;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reservation_id", nullable = false)
     private Reservation reservation;
