@@ -17,11 +17,16 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.projectlombok:lombok:1.18.26'
 	implementation 'org.mindrot:jbcrypt:0.4'
+	implementation 'dk.digst:oiosaml3.java:3.2.1'
 	runtimeOnly 'mysql:mysql-connector-java:8.0.33'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.testcontainers:mysql:1.17.3'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'com.fasterxml.jackson.core:jackson-annotations:2.13.4'
+}
+
+tasks.withType(org.springframework.boot.gradle.tasks.bundling.BootJar) {
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 test {
@@ -78,12 +83,12 @@ tasks.register('buildDockerImages', Exec) {
 	description = 'Build Docker images defined in docker-compose.yml'
 	group = 'docker'
 
-	commandLine 'gradlew clean build -x test'
 	commandLine 'docker-compose', 'build'
 
 	standardOutput = new ByteArrayOutputStream()
 	errorOutput = new ByteArrayOutputStream()
 }
+
 
 tasks.register('restartDockerContainers', Exec) {
 	dependsOn buildDockerImages
@@ -94,6 +99,21 @@ tasks.register('restartDockerContainers', Exec) {
 
 	standardOutput = new ByteArrayOutputStream()
 	errorOutput = new ByteArrayOutputStream()
+
+	doLast {
+		println "Standard Output: ${standardOutput.toString()}"
+		println "Error Output: ${errorOutput.toString()}"
+	}
+
+	execResult = exec {
+		executable gradleExecutable
+		args 'clean', 'build', '-x', 'test'
+		standardOutput = this.standardOutput
+		errorOutput = this.errorOutput
+	}
+
+	execResult.assertNormalExitValue()
+	execResult.rethrowFailure()
 }
 
 tasks.register('startDockerContainers', Exec) {
@@ -104,4 +124,14 @@ tasks.register('startDockerContainers', Exec) {
 
 	standardOutput = new ByteArrayOutputStream()
 	errorOutput = new ByteArrayOutputStream()
+}
+
+
+tasks.register('cleanBuild', Exec){
+	description = 'cleans and build the project without running test'
+	group = 'docker'
+// Use 'gradlew' if using the wrapper, otherwise use 'gradle'
+	def gradleExecutable = './gradle'
+
+	commandLine gradleExecutable, 'clean', 'build', '-x', 'test'
 }
