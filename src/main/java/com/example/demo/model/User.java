@@ -8,8 +8,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "test")
-public class Test extends BaseClass {
+@Table(name = "User")
+public class User extends BaseClass {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

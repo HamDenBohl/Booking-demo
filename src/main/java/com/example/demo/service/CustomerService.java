@@ -1,7 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.model.Customer;
-import com.example.demo.model.Test;
+import com.example.demo.model.User;
 import com.example.demo.repository.CustomerRepository;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class CustomerService {
     public Customer getCustomer(Customer customer){
         Optional<Customer> getUser = customerRepository.findById(customer.getId());
         if(getUser.isEmpty()){
-            new Test();
+            new User();
         }
         return getUser.get();
     }

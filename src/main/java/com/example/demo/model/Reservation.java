@@ -24,6 +24,7 @@ public class Reservation extends BaseClass {
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Booking> booking;
 
+
     public Long getReservationId() {
         return reservationId;
     }

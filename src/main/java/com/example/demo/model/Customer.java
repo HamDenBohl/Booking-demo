@@ -5,6 +5,8 @@ import jakarta.persistence.Table;
 import jakarta.persistence.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.util.UUID;
+import java.util.regex.Pattern;
 import java.util.List;
 
 @Entity
@@ -12,6 +14,7 @@ import java.util.List;
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "customer")
 public class Customer extends BaseClass {
+    private static final String EMAIL_REGEX_PATTERN = "^(.+)@(.+).(.+)$";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,10 +22,8 @@ public class Customer extends BaseClass {
 
     @Column(name = "first_name", nullable = false)
     private String firstName;
-
     @Column(name = "last_name", nullable = false)
     private String lastName;
-
     @Column(name = "email", nullable = false)
     private String email;
 
@@ -54,10 +55,19 @@ public class Customer extends BaseClass {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+        this.email = email;
+    }
+
+    private void isValidEmail(final String email) {
+        Pattern pattern = Pattern.compile(EMAIL_REGEX_PATTERN);
+
+        if(!pattern.matcher(email).matches()) {
+            throw new IllegalArgumentException("Invalid email");
+        }
     }
 
     public String getEmail() {
-        return email;
+        return this.email;
     }
 
     public void setEmail(String email) {
@@ -76,6 +86,12 @@ public class Customer extends BaseClass {
         return reservation;
     }
 
+    @Override
+    public String toString() {
+        return "First Name: " + this.firstName
+                + " Last Name: " + this.lastName
+                + " Email: " + this.email;
+    }
     public void setReservation(List<Reservation> reservation) {
         this.reservation = reservation;
     }

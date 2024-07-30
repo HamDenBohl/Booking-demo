@@ -1,16 +1,15 @@
 package com.example.demo.service;
 
-import java.security.SecureRandom;
-import java.util.Base64;
-import java.util.List;
-import java.util.Optional;
-
-import com.example.demo.model.Test;
+import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
-import lombok.*;
-import org.mindrot.jbcrypt.BCrypt;
+import de.mkammerer.argon2.Argon2;
+import de.mkammerer.argon2.Argon2Factory;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Data
 @Service
@@ -19,33 +18,33 @@ public class UserService {
     @Autowired
     UserRepository userRepository;
 
-    //IMPLEMENTER PBKDF2
+    private Argon2 argon2 = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2id);
 
-    public Test getUser(Test user){
-        Optional<Test> userFromDb = userRepository.findById(user.getId());
-    if(userFromDb.isEmpty() || !userFromDb.isPresent() ){
+    public User getUser(User user) {
+        Optional<User> userFromDb = userRepository.findById(user.getId());
+        if (userFromDb.isEmpty() || !userFromDb.isPresent()) {
             throw new RuntimeException();
         }
         return userFromDb.get();
     }
 
-    public List<Test> getAllUsers(){
-        List<Test> allUsers = userRepository.findAll();
+    public List<User> getAllUsers() {
+        List<User> allUsers = userRepository.findAll();
         return allUsers;
     }
 
 
-    public void createUser(Test user){
+    public void createUser(User user) {
         setPassword(user.getPassword(), user);
         userRepository.save(user);
     }
 
-    public Test editUser(Test user){
-        Optional<Test> existingUser = userRepository.findById(user.getId());
-        if(existingUser.isEmpty()){
-         throw new RuntimeException();
+    public User editUser(User user) {
+        Optional<User> existingUser = userRepository.findById(user.getId());
+        if (existingUser.isEmpty()) {
+            throw new RuntimeException();
         }
-        Test newUser = new Test();
+        User newUser = new User();
         newUser.setEmail(user.getEmail());
         newUser.setUserType(user.getUserType());
         newUser.setInitials(user.getInitials());
@@ -59,35 +58,33 @@ public class UserService {
         return newUser;
     }
 
-    public void deleteUser(Test user){
+    public void deleteUser(User user) {
         Long userId = user.getId();
         userRepository.delete(user);
     }
 
-    public void changePassword(Test user){
+    public void changePassword(User user) {
         setPassword(user.getPassword(), user);
         userRepository.save(user);
     }
 
-    public void setPassword(String password, Test user) {
-        // Generate a random salt
-        SecureRandom random = new SecureRandom();
-        byte[] saltBytes = new byte[16];
-        random.nextBytes(saltBytes);
-        String salt = Base64.getEncoder().encodeToString(saltBytes);
+    public void setPassword(String password, User user) {
+        // Parameters: iterations = 3, memory = 64MB, parallelism = 2
+        int iterations = 3;
+        int memory = 65536; // 64 MB
+        int parallelism = 2;
+        // Hash the password with Argon2
+        String hashedPassword = argon2.hash(iterations, memory, parallelism, password);
 
-        // Hash the password with the salt
-        String hashedPassword = hashPassword(password);
-
-        user.setSalt(salt);
         user.setHashedPassword(hashedPassword);
     }
 
-    private String hashPassword(String password) {
-        return BCrypt.hashpw(password,BCrypt.gensalt(12));
+    public boolean checkPassword(String password, User user) {
+        String hashedPassword = user.getHashedPassword();
+
+        // Verify the password with Argon2
+        return argon2.verify(hashedPassword, password);
     }
-
-
 }
 
 

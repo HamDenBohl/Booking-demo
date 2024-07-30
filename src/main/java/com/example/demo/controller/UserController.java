@@ -1,56 +1,33 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.Reservation;
-import com.example.demo.model.Test;
-import com.example.demo.service.UserService;
-import org.apache.coyote.Response;
+import com.example.demo.model.User;
+import com.example.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 public class UserController {
 
     @Autowired
-    private UserService userService;
+    private UserRepository userRepository;
 
-    @GetMapping ("/findUsers")
-    public ResponseEntity<List<Test>> getAllUsers() {
-        List<Test> users = userService.getAllUsers();
-        return ResponseEntity.ok(users);
+    @GetMapping
+    public List<User> getAllUsers() {
+        List<User> test = new ArrayList<>();
+        User user = new User();
+        user.setId(1234L);
+        user.setFirstName("JOHN");
+        test.add(user);
+        return test;
+//        return userRepository.findAll();
     }
 
-    @GetMapping("/findUser")
-    public ResponseEntity<Test> getUser(@RequestBody Test user) {
-        Test foundUser = userService.getUser(user);
-        return ResponseEntity.ok(foundUser);
+    @PostMapping
+    public User createUser(@RequestBody User user) {
+        return userRepository.save(user);
     }
-
-    @PostMapping("/create")
-    public ResponseEntity createUser(@RequestBody Test user) {
-        userService.createUser(user);
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/edit")
-    public ResponseEntity<Test> editUser(@RequestBody Test user) {
-        Test editedUser = userService.editUser(user);
-        return ResponseEntity.ok(editedUser);
-    }
-
-    @PostMapping("/delete")
-    public ResponseEntity deleteUser(@RequestBody Test user) {
-        userService.deleteUser(user);
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/changePassword")
-    public ResponseEntity changePassword(@RequestBody Test user) {
-        userService.changePassword(user);
-        return ResponseEntity.ok().build();
-    }
-
 }
